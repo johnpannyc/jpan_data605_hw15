@@ -1,0 +1,150 @@
+---
+title: "data605 hw15"
+author: "Jun Pan"
+date: "May 11, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(stats)
+library(ggplot2)
+```
+
+
+#Problem 1
+Find the equation of the regression line for the given points. Round any final values to the nearest hundredth, if necessary.
+
+$(5.6, 8.8), (6.3, 12.4), (7, 14.8), (7.7, 18.2), (8.4, 20.8)$
+
+#Solution
+```{r}
+df <- data.frame(x = c(5.6, 6.3, 7, 7.7, 8.4), y = c(8.8, 12.4, 14.8, 18.2, 20.8))
+mod <- lm(y ~ x, data=df)
+summary(mod)
+
+ggplot(df, aes(x, y)) +
+  geom_point(color = "green", alpha=0.5, size = 3) +
+  geom_abline(aes(slope = coef(mod)[2], intercept = coef(mod)[1], color="red"))
+```
+
+Equation: $y = -14.8 + 4.26x $
+
+
+
+
+#Problem 2
+
+Find all local maxima, local minima, and saddle points for the function given below. Write your answer(s) in the form
+$(x, y, z)$. Separate multiple points with a comma.
+
+$f(x, y) = 24x - 6xy^2 - 8y^3$
+
+#Solution
+
+Partial derivatives:
+
+$df/dx = 24-6y^2$
+$df/dy = -12xy-24y^2$
+
+$d^2f/dx = 0$
+$d^2f/dy = -12x-48y$
+
+$df/dx = 24-6y^2 = 0 -> 4-y^2=0$
+$df/dy = -12xy-24y^2 = 0 -> -xy-2y^2=0$
+
+y=+/-2.  when y=2 then x=-4 and when y=-2 then x=4.  So our points are (4,-2) and (-4,2).
+
+for (4,-2)
+$f(x,y) = 24*4-6*4*(-2)^2-8(-2)^3 = 64$ which is > 0
+
+for (-4,2)
+$f(x,y) = 24*-4-(6*-4*(2)^2)-8(2)^3 = -64$ which is < 0
+
+Therefore, only (-4,2) is the saddle point.
+
+
+#Problem 3
+A grocery store sells two brands of a product, the "house" brand and a "name" brand. The manager estimates that if she sells the "house" brand for $x$ dollars and the "name" brand for $y$ dollars, she will be able to sell $81 - 21x + 17y$ units of the "house" brand and $40 + 11x - 23y$ units of the "name" brand.
+
+Step 1. Find the revenue function $R ( x, y )$.
+Step 2. What is the revenue if she sells the "house" brand for \$2.30 and the "name" brand for \$4.10?
+
+
+$$
+Rev = price * units sold \\
+R_1(x) = x * (81 - 21x + 17y) = (81x -21x^2 + 17xy) \\
+R_2(y) = y * (40 + 11x -23y) = (40y + 11xy = 23y^2)
+$$
+
+
+Revenue
+$$
+R(x,y) = 81x - 21x^2 + 17xy + 40y + 11xy -23y^2 \\
+R(x,y) = -21x^2 + 28xy - 23y^2 + 81x +40y
+$$
+
+```{r}
+r.xy <- function(x, y) -21*x^2 + 28*x*y - 23*y^2 + 81*x + 40*y
+
+r.xy(2.3, 4.1)
+```
+
+
+
+#Problem 4
+A company has a plant in Los Angeles and a plant in Denver. The firm is committed to produce a total of 96 units of a
+product each week. The total weekly cost is given by $C(x, y) = \frac{1}{6} x^2 + \frac{1}{6} y^2 + 7x + 25y + 700$, where $x$ is the number of units produced in Los Angeles and $y$ is the number of units produced in Denver. How many units should be produced in each plant to minimize the total weekly cost?
+
+#Solution
+Consider $x+y=96$, then $x=96-y$.
+
+$$
+\begin{split}
+C(x,y) = C(96-y,y) &= \frac{1}{6} x^2 + \frac{1}{6} y^2 + 7x + 25y + 700 \\
+&=\frac{1}{6} (96-y)^2 + \frac{1}{6} y^2 + 7\times (96-y) + 25y + 700 \\
+&=\frac{1}{6}(y^2 - 192 y + 9216) + \frac{1}{6}y^2+672-7y+25y+700\\
+&= \frac{1}{6}y^2 - 32y+1536+\frac{1}{6}y^2+18y+1372\\
+&= \frac{1}{3}y^2 - 14y + 2908\\
+&=C_1(y)
+\end{split}
+$$
+$C_1'(y) = \frac{2}{3}y-14$
+
+For minimum value,
+$C_1'(y)=\frac{2}{3}y-14=0$,
+then, $y=21$,
+then, $x=96-y=75$.
+
+So, in order to miniumize the cost, 75 units should be produced in Los Angeles and 21 units should be produced in Denver.
+
+
+
+
+
+#Problem 5
+
+Evaluate the double integral on the given region.
+
+$$
+\int\int_R (e^{8x+3y}) dA, R:2\le x\le4\ and\ 2 \le y \le 4
+$$
+Write your answer in exact form without decimals.
+#Solution
+
+
+$$
+\begin{split}
+\int_2^4\int_2^4 (e^{8x+3y})\ dy\ dx &= \int_2^4 (\frac{1}{3}e^{8x+3y})|_2^4\ dx\\
+&= \int_2^4 ((\frac{1}{3}e^{8x+12})-(\frac{1}{3}e^{8x+6}))\ dx\\
+&= \int_2^4 \frac{1}{3}e^{8x+6}(e^6-1)\ dx\\
+&=  \frac{1}{24}e^{8x+6}(e^6-1) |_2^4\\
+&= \frac{1}{24}e^{32+6}(e^6-1)-\frac{1}{24}e^{16+6}(e^6-1)\\
+&= \frac{1}{24}(e^6-1)(e^{38}-e^{22})\\
+&= \frac{1}{24}(e^{44} - e^{38} - e^{28} + e^{22})
+\end{split}
+$$
+
